@@ -8,16 +8,10 @@
 
 */
 
+#include <math.h>
 
-// Date of the countdown
-#define DAY 5
-#define MOMTH 2
-#define YEAR 2018
-#define HOUR 11
-#define MINUTE 00
-#define SECOND 00
-
-// Current Time
+// Date of the countdown in seconds from https://www.epochconverter.com/
+const uint32_t final_date = 1517486400; 
 
 
 // Number Pins Setup (a,b,c,d,e,f,g)
@@ -34,10 +28,30 @@ const uint8_t nine[7] 	= {1,1,1,0,0,1,1};
 
 void setup()
 {
-
+	Serial.begin(9600);
 }
 
 void loop()
 {
 
+	// DateTime now 		= RTC.now(); 								//get the current date-time
+	// current_epoch_time 	= (now.get()); 								//seconds
+	uint32_t current_epoch_time = 1488997525;
+	uint32_t difference = final_date - current_epoch_time;
+
+	uint32_t days 		= floor(difference / 86400);
+	uint32_t hours 		= floor((difference - (days * 86400))/(3600));
+	uint32_t minutes 	= floor((difference - (days * 86400) - (hours * 3600))/60);
+	uint32_t seconds 	= floor(difference - (days * 86400) - (hours * 3600) - (minutes * 60));
+
+	Serial.print(days);
+	Serial.print(" ");
+	Serial.print(hours);
+	Serial.print(" ");
+	Serial.print(minutes);
+	Serial.print(" ");
+	Serial.println(seconds);
+
+
 }
+
