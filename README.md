@@ -4,7 +4,7 @@ This is an Open Source project to develop a count-down circuit that contains 3 d
 
 ![Counter Top](/imgs/counter.png?raw=true)
 
-![Counter 3D Side](/img/counter2.png?raw=true)
+![Counter 3D Side](/imgs/counter2.png?raw=true)
 
 ## Hardware Project
 
