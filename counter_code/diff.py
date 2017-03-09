@@ -16,7 +16,7 @@ while True:
 		minutes = int((difference - (days * 60 * 60 * 24) - (hours * 60 * 60 ))/60)
 		seconds = int(difference - (days * 60 * 60 * 24) - (hours * 60 * 60 ) - (minutes * 60))
 
-		print str(days) + " " + str(hours)+":"+str(minutes)+":"+str(seconds)
+		print str(days).zfill(3)  + " " + str(hours).zfill(2) +":"+str(minutes).zfill(2) +":"+str(seconds).zfill(2) 
 
 	else:
 		print "666 66:66:66"
