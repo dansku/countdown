@@ -28,79 +28,13 @@ const uint8_t seven[7]  = {1, 1, 1, 0, 0, 0, 0};
 const uint8_t eight[7]  = {1, 1, 1, 1, 1, 1, 1};
 const uint8_t nine[7]   = {1, 1, 1, 1, 0, 1, 1};
 
-char dayBuffer[3] ; 
-char hourBuffer[2] ; 
-char minuteBuffer[2] ; 
-char secondBuffer[2] ; 
+uint8_t dayBuffer[3] ; 
+uint8_t hourBuffer[2] ; 
+uint8_t minuteBuffer[2] ; 
+uint8_t secondBuffer[2] ; 
 
 // Final date of the countdown in seconds from https://www.epochconverter.com/
 const uint32_t final_date = 1517486400; 
-
-void setup() {
-  pinMode (dataPin, OUTPUT);
-  pinMode (clockPin, OUTPUT);
-  pinMode (latchPin, OUTPUT);
-
-  for (int i = 0; i <= 8; i++) {
-    pinMode(segPins[i], OUTPUT);
-  }
-  // Serial.begin(9600);
-
-  //INIT ALL OFF
-  SetOFF();
-  lightLeds (0b00000000, 0b00000000);
-  delay(1000);
-}
-
-
-void loop() {
-  
-
-  // DateTime now     = RTC.now();                //get the current date-time
-  // current_epoch_time   = (now.get());                //seconds
-  uint32_t current_epoch_time = 1488997525;
-  uint32_t difference = final_date - current_epoch_time;
-
-  uint32_t days     = floor(difference / 86400);
-  uint32_t hours    = floor((difference - (days * 86400))/(3600));
-  uint32_t minutes  = floor((difference - (days * 86400) - (hours * 3600))/60);
-  uint32_t seconds  = floor(difference - (days * 86400) - (hours * 3600) - (minutes * 60));
-
-  itoa(days, dayBuffer, 10);
-  itoa(hours, hourBuffer, 10);
-  itoa(minutes, minuteBuffer, 10);
-  itoa(seconds, secondBuffer, 10);
-
-    
-    lightLeds (0b10000000, 0b00000000);
-  displayNumber(1);
-
-    lightLeds (0b01000000, 0b00000000);
-  displayNumber(2);
-
-    lightLeds (0b00100000, 0b00000000);
-  displayNumber(3);
-
-    lightLeds (0b00010000, 0b00000000);
-  displayNumber(4);
-
-    lightLeds (0b00001000, 0b00000000);
-  displayNumber(5);
-
-    lightLeds (0b00000100, 0b00000000);
-  displayNumber(6);
-
-    lightLeds (0b00000010, 0b00000000);
-  displayNumber(7);
-
-    lightLeds (0b00000001, 0b00000000);
-  displayNumber(8);
-
-    lightLeds (0b00000000, 0b11111111);
-  displayNumber(9);
-
-
-}
 
 void lightLeds (int second, int first) {
   digitalWrite (latchPin, LOW);
@@ -112,8 +46,7 @@ void lightLeds (int second, int first) {
 
 void displayNumber(int num)
 {
-  // switch (num - '0') { // convert char to int
-    switch (num) { // convert char to int
+    switch (num) { // normal int
     case 1: 
       SetONE();
       break;
@@ -248,5 +181,105 @@ void SetNINE()
     digitalWrite(segPins[i], nine[i]);
   }
 }
+
+
+unsigned long lastTime = 0;
+unsigned long UpdateDelay = 1000;
+
+void setup() {
+  pinMode (dataPin, OUTPUT);
+  pinMode (clockPin, OUTPUT);
+  pinMode (latchPin, OUTPUT);
+
+  for (int i = 0; i <= 8; i++) {
+    pinMode(segPins[i], OUTPUT);
+  }
+  Serial.begin(9600);
+  Serial.println("System Starting");
+
+  //INIT ALL OFF
+  SetOFF();
+  lightLeds (0b00000000, 0b00000000);
+  delay(1000);
+}
+
+
+uint32_t current_epoch_time = 1493588851;
+
+void loop() {
+
+    if(millis() - lastTime >= UpdateDelay)
+    {
+
+        lastTime = millis();
+
+        // DateTime now     = RTC.now();                  //get the current date-time
+        // current_epoch_time   = (now.get());                //seconds
+        
+        uint32_t difference = final_date - current_epoch_time;
+
+        uint32_t days     = floor(difference / 86400);
+        uint32_t hours    = floor((difference - (days * 86400))/(3600));
+        uint32_t minutes  = floor((difference - (days * 86400) - (hours * 3600))/60);
+        uint32_t seconds  = floor(difference -  (days * 86400) - (hours * 3600) - (minutes * 60));
+
+        // Split Numbers into array
+        dayBuffer[2] = days % 10;
+        dayBuffer[1] = (days / 10) % 10;
+        dayBuffer[0] = (days / 100) % 10;
+
+        hourBuffer[1] = hours % 10;
+        hourBuffer[0] = (hours / 10) % 10;
+
+        minuteBuffer[1] = minutes % 10;
+        minuteBuffer[0] = (minutes / 10) % 10;
+
+        secondBuffer[1] = seconds % 10;
+        secondBuffer[0] = (seconds / 10) % 10;
+
+        current_epoch_time++;
+
+    }
+
+
+
+
+    
+    lightLeds (0b10000000, 0b00000000);
+    displayNumber(dayBuffer[0]);
+
+    lightLeds (0b01000000, 0b00000000);
+    displayNumber(dayBuffer[1]);
+
+    lightLeds (0b00100000, 0b00000000);
+    displayNumber(dayBuffer[2]);
+
+
+
+    lightLeds (0b00010000, 0b00000000);
+    displayNumber(hourBuffer[0]);
+
+    lightLeds (0b00001000, 0b00000000);
+    displayNumber(hourBuffer[1]);
+
+
+
+    lightLeds (0b00000100, 0b00000000);
+    displayNumber(minuteBuffer[0]);
+
+    lightLeds (0b00000010, 0b00000000);
+    displayNumber(minuteBuffer[1]);
+
+
+
+    lightLeds (0b00000001, 0b00000000);
+    displayNumber(secondBuffer[0]);
+
+    lightLeds (0b00000000, 0b11111111);
+    displayNumber(secondBuffer[1]);
+
+
+}
+
 
 
