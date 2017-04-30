@@ -71,32 +71,33 @@ void loop() {
   itoa(minutes, minuteBuffer, 10);
   itoa(seconds, secondBuffer, 10);
 
-    int d = 1;
-
-    SetTHREE();
-    delay(d);
-    SetOFF();
+    
     lightLeds (0b10000000, 0b00000000);
+  displayNumber(1);
 
-    SetFOUR();
-    delay(d);
-    SetOFF();
     lightLeds (0b01000000, 0b00000000);
+  displayNumber(2);
 
-    SetONE();
-    delay(d);
-    SetOFF();
     lightLeds (0b00100000, 0b00000000);
+  displayNumber(3);
 
+    lightLeds (0b00010000, 0b00000000);
+  displayNumber(4);
 
-    // lightLeds (0b00010000, 0b00000000);
-    // lightLeds (0b00001000, 0b00000000);
+    lightLeds (0b00001000, 0b00000000);
+  displayNumber(5);
 
-    // lightLeds (0b00000100, 0b00000000);
-    // lightLeds (0b00000010, 0b00000000);
+    lightLeds (0b00000100, 0b00000000);
+  displayNumber(6);
 
-    // lightLeds (0b00000001, 0b00000000);
-    // lightLeds (0b00000000, 0b11111111);
+    lightLeds (0b00000010, 0b00000000);
+  displayNumber(7);
+
+    lightLeds (0b00000001, 0b00000000);
+  displayNumber(8);
+
+    lightLeds (0b00000000, 0b11111111);
+  displayNumber(9);
 
 
 }
@@ -111,8 +112,8 @@ void lightLeds (int second, int first) {
 
 void displayNumber(int num)
 {
-  SetOFF();
-  switch (num - '0') { // convert char to int
+  // switch (num - '0') { // convert char to int
+    switch (num) { // convert char to int
     case 1: 
       SetONE();
       break;
@@ -156,6 +157,8 @@ void displayNumber(int num)
       SetOFF();
       break;
   }
+  delay(1);
+  SetOFF();
 }
 
 void SetOFF()
